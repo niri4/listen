@@ -68,8 +68,7 @@ module Listen
         _queue_change(:dir, dir, rel_path, recursive: true)
       rescue ArgumentError => e
         Listen.logger.error(e.full_message)
-        err = { error: e.message, file_path: path.to_s }
-        ::Thread.main.raise ::Listen::Error::ArgumentError, err
+        ::Thread.main.raise ::Listen::Error::InvalidEncodedError.new(path.to_s), e.message
       end
 
       def _stop

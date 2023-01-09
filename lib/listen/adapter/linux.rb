@@ -72,8 +72,7 @@ module Listen
         _queue_change(:file, dir, rel_path, params)
       rescue ArgumentError => e
         Listen.logger.error(e.full_message)
-        err = { error: e.message, file_path: event.watcher.path.to_s }
-        ::Thread.main.raise ::Listen::Error::ArgumentError, err
+        ::Thread.main.raise ::Listen::Error::InvalidEncodedError.new(event.watcher.path.to_s), e.message 
       end
       # rubocop:enable Metrics/MethodLength
 
