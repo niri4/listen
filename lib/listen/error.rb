@@ -7,5 +7,6 @@ module Listen
     class NotStarted < Error; end
     class SymlinkLoop < Error; end
     class INotifyMaxWatchesExceeded < Error; end
+    class ArgumentError < Error; end
   end
 end

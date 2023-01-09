@@ -63,9 +63,14 @@ module Listen
 
       def _process_event(dir, path)
         Listen.logger.debug { "fsevent: processing path: #{path.inspect}" }
+        Pathname.new("/Users/nirankarsingh/Downloads/\255") + "create"
         # TODO: does this preserve symlinks?
         rel_path = path.relative_path_from(dir).to_s
         _queue_change(:dir, dir, rel_path, recursive: true)
+      rescue ArgumentError => e
+        Listen.logger.error(e.full_message)
+        err = { error: e.message, file_path: path.to_s }
+        ::Thread.main.raise ::Listen::Error::ArgumentError, err
       end
 
       def _stop

@@ -70,6 +70,10 @@ module Listen
         params = cookie_params.merge(change: _change(event.flags))
 
         _queue_change(:file, dir, rel_path, params)
+      rescue ArgumentError => e
+        Listen.logger.error(e.full_message)
+        err = { error: e.message, file_path: event.watcher.path.to_s }
+        ::Thread.main.raise ::Listen::Error::ArgumentError, err
       end
       # rubocop:enable Metrics/MethodLength
 
