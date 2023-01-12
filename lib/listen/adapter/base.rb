@@ -4,10 +4,12 @@ require 'listen/options'
 require 'listen/record'
 require 'listen/change'
 require 'listen/thread'
+require 'listen/helpers/file_helper'
 
 module Listen
   module Adapter
     class Base
+      include FileHelper
       attr_reader :options, :config
 
       # TODO: only used by tests

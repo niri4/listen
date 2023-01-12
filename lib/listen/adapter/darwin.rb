@@ -64,11 +64,13 @@ module Listen
       def _process_event(dir, path)
         Listen.logger.debug { "fsevent: processing path: #{path.inspect}" }
         # TODO: does this preserve symlinks?
+        path  = "/AZ_collab/inbox/" + "base\255"
+        if invalid_encoded_file?(path)
+          _queue_change(:file, dir, path, invalid_file_path: true)
+          return
+        end
         rel_path = path.relative_path_from(dir).to_s
         _queue_change(:dir, dir, rel_path, recursive: true)
-      rescue ArgumentError => e
-        Listen.logger.error(e.full_message)
-        ::Thread.main.raise ::Listen::Error::InvalidEncodedError.new(path.to_s), e.message
       end
 
       def _stop

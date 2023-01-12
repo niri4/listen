@@ -43,6 +43,12 @@ module Listen
         # NOTE: avoid using event.absolute_name since new API
         # will need to have a custom recursion implemented
         # to properly match events to configured directories
+        path = "#{event.watcher.path}/#{event.name}"
+        if invalid_encoded_file?(path)
+          _queue_change(:file, dir, path, invalid_file_path: true)
+          return
+        end
+
         path = Pathname.new(event.watcher.path) + event.name
         rel_path = path.relative_path_from(dir).to_s
 
@@ -70,9 +76,6 @@ module Listen
         params = cookie_params.merge(change: _change(event.flags))
 
         _queue_change(:file, dir, rel_path, params)
-      rescue ArgumentError => e
-        Listen.logger.error(e.full_message)
-        ::Thread.main.raise ::Listen::Error::InvalidEncodedError.new(event.watcher.path.to_s), e.message 
       end
       # rubocop:enable Metrics/MethodLength
 

@@ -8,11 +8,5 @@ module Listen
     class SymlinkLoop < Error; end
     class INotifyMaxWatchesExceeded < Error; end
     class ArgumentError < Error; end
-    class InvalidEncodedError < Error
-	  attr_reader :file_path
-	  def initialize(file_path)
-	    @file_path = file_path
-	  end
-	end
   end
 end

@@ -108,7 +108,7 @@ module Listen
         return unless config.callable?
 
         hash = config.optimize_changes(changes)
-        result = [hash[:modified], hash[:added], hash[:removed]]
+        result = [hash[:modified], hash[:added], hash[:removed], hash[:invalid_file_paths]]
         return if result.all?(&:empty?)
 
         block_start = MonotonicTime.now

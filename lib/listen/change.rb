@@ -35,6 +35,10 @@ module Listen
     # rubocop:disable Metrics/PerceivedComplexity
     def invalidate(type, rel_path, options)
       watched_dir = Pathname.new(record.root)
+      if options[:invalid_file_path]
+        @config.queue(:file, :invalid_path, watched_dir, rel_path)
+        return
+      end
 
       change = options[:change]
       cookie = options[:cookie]
