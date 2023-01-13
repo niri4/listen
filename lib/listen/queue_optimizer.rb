@@ -57,7 +57,7 @@ module Listen
 
       config.debug("listen: raw changes: #{actions.inspect}")
 
-      { modified: [], added: [], removed: [], invalid_file_paths: [] }.tap do |squashed|
+      { modified: [], added: [], removed: [], invalid_file_path: [] }.tap do |squashed|
         actions.each do |type, path|
           squashed[type] << path unless type.nil?
         end
@@ -81,7 +81,7 @@ module Listen
       # TODO: avoid checking if path exists and instead assume the events are
       # in order (if last is :removed, it doesn't exist, etc.)
       if config.invalid_encoded_file?(path)
-        :invalid_file_paths
+        :invalid_file_path
       elsif config.exist?(path)
         if diff > 0
           :added
@@ -98,7 +98,7 @@ module Listen
     # remove extraneous rb-inotify events, keeping them only if it's a possible
     # editor rename() call (e.g. Kate and Sublime)
     def _reinterpret_related_changes(cookies)
-      table = { moved_to: :added, moved_from: :removed, invalid_file_paths: :invalid_file_paths }
+      table = { moved_to: :added, moved_from: :removed, invalid_file_path: :invalid_file_path}
       cookies.flat_map do |_, changes|
         if (editor_modified = editor_modified?(changes))
           [[:modified, *editor_modified]]
